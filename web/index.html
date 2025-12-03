@@ -60,11 +60,7 @@
         document.addEventListener("DOMContentLoaded", () => {
             const statusEl = document.getElementById("status");
             const tbody = document.getElementById("rrd-body");
-            const endpoint = "/rrd";
-            const needsBase = window.location.origin === "null" || window.location.protocol === "file:";
-            const apiUrl = needsBase ? `http://127.0.0.1:8000${endpoint}` : endpoint;
-
-            fetch(apiUrl)
+            fetch("/rrd")
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error(`Ошибка загрузки: ${response.status}`);

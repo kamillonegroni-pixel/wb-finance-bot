@@ -1,14 +1,16 @@
 """FastAPI server exposing recent Wildberries RRD rows."""
 from __future__ import annotations
 
+import os
 import sqlite3
-from pathlib import Path
 from typing import List
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-DB_PATH = Path("db") / "wb_reports.db"
+DB_PATH = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "db", "wb_reports.db")
+)
 
 app = FastAPI(title="WB Financial Reports")
 app.add_middleware(
