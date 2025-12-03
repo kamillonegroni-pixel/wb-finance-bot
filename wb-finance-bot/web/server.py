@@ -3,20 +3,13 @@ from __future__ import annotations
 
 import os
 import sqlite3
-from pathlib import Path
 from typing import List
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-# Absolute path to the SQLite DB file used by the API.
-# We keep it as a Path object to safely work with filesystem checks.
-DB_PATH = (
-    Path(__file__)
-    .resolve()
-    .parent.parent  # project root
-    / "db"
-    / "wb_reports.db"
+DB_PATH = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "db", "wb_reports.db")
 )
 
 app = FastAPI(title="WB Financial Reports")
@@ -32,7 +25,7 @@ app.add_middleware(
 def fetch_latest_rrd(limit: int = 100) -> List[dict]:
     if not DB_PATH.exists():
         raise HTTPException(status_code=500, detail=f"Database not found at {DB_PATH}")
-    conn = sqlite3.connect(str(DB_PATH))
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     try:
         rows = conn.execute(
